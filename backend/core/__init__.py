@@ -25,11 +25,11 @@ if BACKEND_DIR not in sys.path:
 load_dotenv(os.path.join(BACKEND_DIR, '.env'))
 
 from config import get_config
-from app.models import db, User
+from core.models import db, User
 
 # Initialize Flask-Login and Flask-Mail
-from app.extensions import login_manager, oauth, socketio
-from app.services.email_service import mail
+from core.extensions import login_manager, oauth, socketio
+from core.services.email_service import mail
 from flask_compress import Compress
 
 # Initialize Compress
@@ -105,7 +105,7 @@ def create_app(config_name='default'):
         return User.query.get(int(user_id))
     
     # Register blueprints (routes)
-    from app.routes.web_routes import main_bp, auth_bp, service_bp, user_bp, admin_bp, api_bp, availability_bp
+    from core.routes.web_routes import main_bp, auth_bp, service_bp, user_bp, admin_bp, api_bp, availability_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -116,7 +116,7 @@ def create_app(config_name='default'):
     app.register_blueprint(availability_bp, url_prefix='/availability')
     
     # AskVera Chatbot
-    from app.routes.chat_routes import chat_bp
+    from core.routes.chat_routes import chat_bp
     app.register_blueprint(chat_bp, url_prefix='/chat')
     
     # Error handlers
@@ -146,7 +146,7 @@ def create_app(config_name='default'):
         seed_categories()
     
     # Register Socket.IO events
-    from app.socket_events import register_socketio_events
+    from core.socket_events import register_socketio_events
     register_socketio_events(socketio)
     
     # Template filter for IST conversion
