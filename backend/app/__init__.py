@@ -14,18 +14,22 @@ import os
 import sys
 from dotenv import load_dotenv
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Get the backend directory path
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Load environment variables first
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+# Add backend directory to path for imports
+if BACKEND_DIR not in sys.path:
+    sys.path.insert(0, BACKEND_DIR)
 
-from backend.config import get_config
-from backend.app.models import db, User
+# Load environment variables
+load_dotenv(os.path.join(BACKEND_DIR, '.env'))
+
+from config import get_config
+from app.models import db, User
 
 # Initialize Flask-Login and Flask-Mail
-from backend.app.extensions import login_manager, oauth, socketio
-from backend.app.services.email_service import mail
+from app.extensions import login_manager, oauth, socketio
+from app.services.email_service import mail
 from flask_compress import Compress
 
 # Initialize Compress
@@ -46,10 +50,13 @@ def create_app(config_name='default'):
         Flask: Configured Flask application
     """
     
+    # Get paths for templates and static folders
+    frontend_dir = os.path.join(os.path.dirname(BACKEND_DIR), 'frontend')
+    
     # Create Flask application instance with custom template and static folders
     app = Flask(__name__,
-                template_folder='../../frontend/templates',
-                static_folder='../../frontend/static')
+                template_folder=os.path.join(frontend_dir, 'templates'),
+                static_folder=os.path.join(frontend_dir, 'static'))
     
     # Load configuration
     config_class = get_config(config_name)
@@ -98,7 +105,7 @@ def create_app(config_name='default'):
         return User.query.get(int(user_id))
     
     # Register blueprints (routes)
-    from backend.app.routes.web_routes import main_bp, auth_bp, service_bp, user_bp, admin_bp, api_bp, availability_bp
+    from app.routes.web_routes import main_bp, auth_bp, service_bp, user_bp, admin_bp, api_bp, availability_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -109,7 +116,7 @@ def create_app(config_name='default'):
     app.register_blueprint(availability_bp, url_prefix='/availability')
     
     # AskVera Chatbot
-    from backend.app.routes.chat_routes import chat_bp
+    from app.routes.chat_routes import chat_bp
     app.register_blueprint(chat_bp, url_prefix='/chat')
     
     # Error handlers
@@ -134,12 +141,12 @@ def create_app(config_name='default'):
         db.create_all()
         
         # Create default admin user if not exists
-        from backend.scripts.seed_database import create_default_admin, seed_categories
+        from scripts.seed_database import create_default_admin, seed_categories
         create_default_admin(app)
         seed_categories()
     
     # Register Socket.IO events
-    from backend.app.socket_events import register_socketio_events
+    from app.socket_events import register_socketio_events
     register_socketio_events(socketio)
     
     # Template filter for IST conversion
