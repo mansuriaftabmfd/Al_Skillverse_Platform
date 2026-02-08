@@ -10,7 +10,7 @@ Author: SkillVerse Team
 Purpose: Initialize database with default data
 """
 
-from models import db, User, Category, Service
+from core.models import db, User, Category, Service
 from werkzeug.security import generate_password_hash
 
 
