@@ -7,7 +7,7 @@ This module handles WebSocket events for real-time messaging
 from flask import request
 from flask_login import current_user
 from flask_socketio import emit, join_room, leave_room
-from models import db, Message, Order
+from core.models import db, Message, Order
 from managers import chat_manager
 import pytz
 
@@ -104,7 +104,7 @@ def register_socketio_events(socketio):
         # Create notification for the recipient (with rate limiting)
         order = Order.query.get(order_id)
         if order:
-            from models import Notification
+            from core.models import Notification
             from flask import url_for
             from datetime import datetime, timedelta
             

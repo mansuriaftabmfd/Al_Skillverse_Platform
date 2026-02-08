@@ -20,7 +20,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from datetime import datetime, timezone, timedelta
 from flask_login import login_user, logout_user, login_required, current_user
 from functools import wraps
-from models import db, User, Service, Category, Review, Order, Favorite, Notification, Message, ProjectShowcase, AvailabilitySlot, Booking, Testimonial, ContactMessage
+from core.models import db, User, Service, Category, Review, Order, Favorite, Notification, Message, ProjectShowcase, AvailabilitySlot, Booking, Testimonial, ContactMessage
 from managers import (service_manager, user_manager, search_engine, 
                      review_system, order_manager, category_manager, notification_manager, chat_manager, availability_manager)
 from werkzeug.utils import secure_filename
@@ -2003,7 +2003,7 @@ def manage():
     """
     Provider Availability Management Page
     """
-    from models import Booking, AvailabilitySlot
+    from core.models import Booking, AvailabilitySlot
     # Get pending bookings for this provider
     pending_bookings = Booking.query.join(AvailabilitySlot).filter(
         AvailabilitySlot.provider_id == current_user.id,
@@ -2179,7 +2179,7 @@ def approve_booking(booking_id):
     success, error = availability_manager.approve_booking(booking_id, current_user.id)
     if success:
         # Send confirmation email
-        from models import Booking, Notification
+        from core.models import Booking, Notification
         booking = Booking.query.get(booking_id)
         from email_utils import send_booking_confirmation_email
         if booking:
@@ -2209,7 +2209,7 @@ def approve_booking(booking_id):
 def reject_booking(booking_id):
     """Reject a booking request"""
     # Get booking info BEFORE rejecting (so we have the slot time)
-    from models import Booking, Notification
+    from core.models import Booking, Notification
     booking = Booking.query.get(booking_id)
     client_id = booking.client_id if booking else None
     slot_time = booking.slot.start_time.strftime('%d %b %Y at %I:%M %p') if booking else ''

@@ -16,7 +16,7 @@ import heapq
 import random
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
-from models import db, Service, User, Category, Review, Order, Favorite, Notification, Message
+from core.models import db, Service, User, Category, Review, Order, Favorite, Notification, Message
 from sqlalchemy.orm import joinedload
 
 from flask import current_app
@@ -910,7 +910,7 @@ class AvailabilityManager:
         """
         Get slots for a provider within a date range
         """
-        from models import AvailabilitySlot, User, Booking
+        from core.models import AvailabilitySlot, User, Booking
         
         # 1. Get SkillVerse Slots
         slots = AvailabilitySlot.query.filter(
@@ -944,7 +944,7 @@ class AvailabilityManager:
         Create availability slot(s)
         If is_recurring=True, creates slots for the next 'weeks' weeks
         """
-        from models import AvailabilitySlot
+        from core.models import AvailabilitySlot
         
         # Validation: start < end
         if start_time >= end_time:
@@ -991,7 +991,7 @@ class AvailabilityManager:
 
     def delete_slot(self, slot_id, provider_id):
         """Delete a slot if not booked"""
-        from models import AvailabilitySlot
+        from core.models import AvailabilitySlot
         
         slot = AvailabilitySlot.query.get(slot_id)
         if not slot:
@@ -1013,7 +1013,7 @@ class AvailabilityManager:
         Uses transaction to prevent double booking
         Includes self-healing for data inconsistencies
         """
-        from models import AvailabilitySlot, Booking
+        from core.models import AvailabilitySlot, Booking
         
         try:
             # Start transaction (implicit in SQLAlchemy commit)
@@ -1070,7 +1070,7 @@ class AvailabilityManager:
 
     def cancel_booking(self, booking_id, user_id):
         """Cancel a booking (client or provider)"""
-        from models import Booking
+        from core.models import Booking
         
         booking = Booking.query.get(booking_id)
         if not booking:
@@ -1091,7 +1091,7 @@ class AvailabilityManager:
 
     def approve_booking(self, booking_id, provider_id):
         """Approve a booking and create an order if needed"""
-        from models import Booking, Order
+        from core.models import Booking, Order
         
         booking = Booking.query.get(booking_id)
         if not booking:
@@ -1133,7 +1133,7 @@ class AvailabilityManager:
 
     def reject_booking(self, booking_id, provider_id):
         """Reject a booking"""
-        from models import Booking
+        from core.models import Booking
         
         booking = Booking.query.get(booking_id)
         if not booking:

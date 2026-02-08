@@ -397,7 +397,7 @@ class Service(db.Model):
         if not user or not user.is_authenticated:
             return False
         # Fix for DetachedInstanceError: Query Favorite model directly
-        from models import Favorite
+        from core.models import Favorite
         return Favorite.query.filter_by(service_id=self.id, user_id=user.id).first() is not None
     
     def get_image_url(self):
