@@ -350,7 +350,7 @@ def register():
 @auth_bp.route('/login/google')
 def google_login():
     """Initiate Google OAuth login"""
-    from extensions import oauth
+    from core.extensions import oauth
     redirect_uri = url_for('auth.google_callback', _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
@@ -358,7 +358,7 @@ def google_login():
 @auth_bp.route('/login/google/callback')
 def google_callback():
     """Handle Google OAuth callback"""
-    from extensions import oauth
+    from core.extensions import oauth
     from werkzeug.security import generate_password_hash
     import os
     from datetime import timedelta
