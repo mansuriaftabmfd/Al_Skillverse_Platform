@@ -45,3 +45,4 @@ Flask-Compress==1.14
 
 gunicorn==21.2.0
 groq>=0.4.0
+matplotlib>=3.7.0
