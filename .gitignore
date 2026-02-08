@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+backend/.env
+
+# Database files
+*.db
+*.sqlite3
+instance/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+transactions.txt
+wallets.txt
+
+# Uploads (user generated content)
+frontend/static/uploads/*
+frontend/static/avatars/*
+frontend/static/portfolio/*
+frontend/invoices/*
+
+# Keep empty directories
+!frontend/static/uploads/.gitkeep
+!frontend/static/avatars/.gitkeep
+!frontend/static/portfolio/.gitkeep
+!frontend/invoices/.gitkeep
+
+# Pytest
+.pytest_cache/
+.coverage
+
+# Distribution
+dist/
+build/
+*.egg-info/
