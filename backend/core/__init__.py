@@ -29,7 +29,7 @@ from core.models import db, User
 
 # Initialize Flask-Login and Flask-Mail
 from core.extensions import login_manager, oauth, socketio
-from core.services.email_service import mail
+from core.services.email_utils import mail
 from flask_compress import Compress
 
 # Initialize Compress
